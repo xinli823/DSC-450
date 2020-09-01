@@ -1,0 +1,141 @@
+-- Part 1: from 1 to 3 questions --
+
+--- 1-1 ---
+DROP TABLE Authors;
+DROP TABLE Publishers;
+DROP TABLE Books;
+DROP TABLE Writes;
+
+CREATE TABLE Authors
+(
+    LastName VARCHAR2(20),
+    FirstName VARCHAR2(20),
+    ID NUMBER(*,0),
+    Birthday DATE,
+    
+    CONSTRAINT Authors_PK
+        PRIMARY KEY(ID)
+);
+
+CREATE TABLE Publishers
+(
+    Name VARCHAR2(30),
+    PubNumber NUMBER(2),
+    Address VARCHAR2(30),
+    
+    CONSTRAINT Publishers_PK
+        PRIMARY KEY(PubNumber)
+);
+
+CREATE TABLE Books
+(
+    ISBN VARCHAR2(8),
+    Title VARCHAR2(40),
+    Publisher NUMBER(2),
+    
+    CONSTRAINT Books_PK
+        PRIMARY KEY(ISBN),
+    CONSTRAINT Books_FK
+        FOREIGN KEY(Publisher)
+        REFERENCES Publishers(PubNumber)
+);
+
+CREATE TABLE Writes
+(
+    author_ID NUMBER(2),
+    book_ISBN VARCHAR2(8),
+    author_Position NUMBER(2),
+    
+    CONSTRAINT author_ID_PK
+        PRIMARY KEY(author_ID,book_ISBN),
+    
+    CONSTRAINT author_ID_FK
+        FOREIGN KEY(author_ID)
+            REFERENCES Authors(ID),
+    
+    CONSTRAINT book_ISBN_FK
+        FOREIGN KEY(book_ISBN)
+            REFERENCES Books(ISBN)
+);
+
+
+
+
+
+--- 1-2 ---
+INSERT INTO Authors VALUES ('King', 'Stephen', 2 ,  to_date('September 9 1947', 'Month dd YYYY'));
+INSERT INTO Authors VALUES ('Asimov', 'Isaac', 4 ,  to_date('January 2 1921', 'Month dd YYYY'));
+INSERT INTO Authors VALUES ('Verne', 'Jules', 7 ,  to_date('February 8 1828', 'Month dd YYYY'));
+INSERT INTO Authors VALUES ('Rowling', 'Joanne', 37 ,  to_date('July 31 1965', 'Month dd YYYY'));
+
+INSERT INTO Publishers VALUES ('Bloomsbury Publishing', 17, 'London Borough of Camden');
+INSERT INTO Publishers VALUES ('Arthur A. Levine Books', 18, 'New York City');
+
+INSERT INTO Books VALUES ('1111-111', 'Databases from outer space', 17);
+INSERT INTO Books VALUES ('2222-222', 'Revenge of SQL', 17);
+INSERT INTO Books VALUES ('3333-333', 'The night of the living databases', 18);
+
+
+INSERT INTO Writes VALUES (2, '1111-111', 1);
+INSERT INTO Writes VALUES (4, '1111-111', 2);
+INSERT INTO Writes VALUES (4, '2222-222', 2);
+INSERT INTO Writes VALUES (7, '2222-222', 1);
+INSERT INTO Writes VALUES (37, '3333-333', 1);
+INSERT INTO Writes VALUES (2, '3333-333', 2);
+
+
+SELECT * FROM Authors;
+SELECT * FROM Publishers;
+SELECT * FROM Books;
+SELECT * FROM Writes;
+
+--- 1-3 ---
+DROP TABLE Advisors;
+DROP TABLE Students;
+DROP TABLE Departments;
+
+ CREATE TABLE Departments
+(
+    D_Name VARCHAR2(50),
+    Chair VARCHAR2(20),
+    RefD VARCHAR2(50),
+   
+    CONSTRAINT D_Name_PK
+        PRIMARY KEY(D_Name)
+);
+
+ CREATE TABLE Advisors
+(
+    ID VARCHAR2(50),
+    Name VARCHAR2(50),
+    Address VARCHAR2(50),
+    ResearchArea VARCHAR2(20),
+    RefD VARCHAR2(50),
+    
+    CONSTRAINT ID_PK
+        PRIMARY KEY(ID),
+        
+    CONSTRAINT RefD
+        FOREIGN KEY(RefD)
+            REFERENCES Departments(D_Name)
+);
+     
+     
+ CREATE TABLE Students
+(
+    student_ID NUMBER(*,0),
+    FirstName VARCHAR2(20),
+    LastName VARCHAR2(20),
+    DOB DATE,
+    Telephone  NUMBER(*,0),
+    RefA  VARCHAR2(50),
+   
+    CONSTRAINT student_ID_PK
+        PRIMARY KEY(student_ID),
+        
+    CONSTRAINT RefA_FK
+        FOREIGN KEY(RefA)
+            REFERENCES Advisors(ID)
+);
+
+
